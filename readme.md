@@ -8,4 +8,12 @@ O que é um Maven Goal?
 
 Quais os principais Maven Goals e a sua sequência de invocação?
 
-    
+    Maven Phases:
+        >validate;
+        >compile;
+        >test-compile;
+        >test;
+        >package;
+        >integration-test;
+        >install;
+        >deploy;
