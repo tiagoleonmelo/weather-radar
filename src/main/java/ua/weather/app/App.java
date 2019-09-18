@@ -19,9 +19,45 @@ public class App
   private static Logger logger = LogManager.getLogger(App.class);
 
   public static void main(String[] args) {
-    final int CITY_ID = Integer.parseInt(args[0]);
+    int CITY_ID = -1;
+    final String CITY_NAME = args[0];
+
+    //
+
+    Retrofit retrofit_ = new Retrofit.Builder().baseUrl("http://api.ipma.pt/open-data/").addConverterFactory(GsonConverterFactory.create()).build();
+    IpmaService service_ = retrofit_.create(IpmaService.class);
+    Call<IpmaCityCodes> callSync_ = service_.getForecastForName();
+
+    try {
+      Response<IpmaCityCodes> apiResponse_ = callSync_.execute();
+      IpmaCityCodes forecast_ = apiResponse_.body();
+      List<CityCodes> data_ = forecast_.getData();
+      ListIterator<CityCodes> it_ = data_.listIterator();
+      CityCodes temp;
+
+      while(it_.hasNext()){
+        temp = it_.next();
+        if(temp.getLocal().toUpperCase().equals(CITY_NAME.toUpperCase()) ){
+          CITY_ID = temp.getGlobalIdLocal();
+        }
+      }
+
+      if(CITY_ID == -1){
+        logger.error("ERROR: City not found");
+        System.exit(1);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      
+    }
+
+
+
+    //
+    
     Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.ipma.pt/open-data/").addConverterFactory(GsonConverterFactory.create()).build();
-    IpmaService service = retrofit.create(IpmaService.class);
+    IpmaService service = retrofit.create(IpmaService.class); 
     Call<IpmaCityForecast> callSync = service.getForecastForACity( CITY_ID );
     try {
       Response<IpmaCityForecast> apiResponse = callSync.execute();
