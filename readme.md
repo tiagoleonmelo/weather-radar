@@ -17,3 +17,6 @@ Quais os principais Maven Goals e a sua sequência de invocação?
         >integration-test;
         >install;
         >deploy;
+
+How to run:
+    $ mvn exec:java -Dexec.mainClass="ua.weather.app.App" -Dexec.args="1010500" -Dlog4j.configurationFile="src/main/resources/log4j.xml"
